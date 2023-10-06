@@ -3,46 +3,34 @@ import React from 'react';
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { GiftedChat } from 'react-native-gifted-chat';
+import { firebaseConfig } from '../firebaseConfig';
 
 export default function ChatScreen() {
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-  // Function to send a message
-
-  const sendMessage = (messageText) => {
-    const messagesRef = database().ref('messages');
-    const newMessageRef = messagesRef.push();
-    newMessageRef.set({
-      text: messageText,
-      timestamp: firebase.database.ServerValue.TIMESTAMP,
-    });
-  };
-
-  // Function to listen for new messages
-  const listenForMessages = () => {
-    const messagesRef = database().ref('messages');
-    messagesRef.on('child_added', (snapshot) => {
-      const message = snapshot.val();
-      // Update your state with the new message
-    });
-  };
   const ChatScreen = () => {
     const [messages, setMessages] = useState([]);
 
-    const onSend = (newMessages = []) => {
-      setMessages((prevMessages) =>
-        GiftedChat.append(prevMessages, newMessages)
-      );
-    };
-  };
+    useEffect(() => {
+      // Load chat messages from Firebase Firestore
+      // Update the 'messages' state with the fetched messages
+    }, []);
 
-  return (
-    <View style={{ flex: 1 }}>
-      <GiftedChat
-        messages={messages}
-        onSend={(newMessages) => onSend(newMessages)}
-        user={{ _id: 1 }}
-      />
-    </View>
-  );
+    const onSend = (newMessages = []) => {
+      // Send a new message to Firebase Firestore
+      // Update 'messages' state with the new message
+    };
+
+    return (
+      <>
+        <View style={{ flex: 1, backgroundColor: red }}>
+          <Text>Chat Here</Text>
+        </View>
+
+        <GiftedChat
+          messages={messages}
+          onSend={(newMessages) => onSend(newMessages)}
+          user={{ _id: auth().currentUser.uid }}
+        />
+      </>
+    );
+  };
 }
